@@ -3,7 +3,7 @@ plugins {
     id "com.github.spacialcircumstances.gradle-cucumber-reporting" version "0.1.22"
 }
 
-group 'org.softwaretestinghelp.gradle_selenium'
+group 'org.cvelez.seleniumtest'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
@@ -51,14 +51,8 @@ def generateTagExpr(String tags) {
     return tags
 }
 
-task cucumberStaging(type: Test) {
-    dependsOn classes, testClasses, assemble
-    System.properties.put("cucumber.options", "--monochrome --tags '" + generateTagExpr('@automation:done') +  "'")
-    testLogging.showStandardStreams = true
-    include "TestCucumberStaging.*"
-}
 
-task seleniumTest(type: Test) {
+task seleniumTests(type: Test) {
     dependsOn classes, testClasses, assemble
     System.properties.put("cucumber.options", "--monochrome --tags '" + generateTagExpr('@automation:done') +  "'")
     testLogging.showStandardStreams = true
