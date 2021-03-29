@@ -1,0 +1,67 @@
+plugins {
+    id 'java'
+    id "com.github.spacialcircumstances.gradle-cucumber-reporting" version "0.1.22"
+}
+
+group 'org.softwaretestinghelp.gradle_selenium'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testRuntime
+    }
+}
+cucumberReports {
+    outputDir = file('build/cucumber-report/report')
+    buildId = '0'
+    reports = files('build/cucumber-report/cucumber.json')
+}
+
+dependencies {
+    //testCompile group: 'junit', name: 'junit', version: '4.12'
+    // https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
+    compile group: 'org.seleniumhq.selenium', name: 'selenium-java',
+            version: '3.141.59'
+    // https://mvnrepository.com/artifact/io.cucumber/cucumber-java
+    compile group: 'io.cucumber', name: 'cucumber-java', version: '5.6.0'
+    // https://mvnrepository.com/artifact/io.cucumber/cucumber-junit
+    testCompile group: 'io.cucumber', name: 'cucumber-junit', version: '5.6.0'
+
+    // https://mvnrepository.com/artifact/org.hamcrest/hamcrest
+    testCompile group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
+
+    // https://mvnrepository.com/artifact/io.github.prashant-ramcharan/courgette-jvm
+    compile group: 'io.github.prashant-ramcharan', name: 'courgette-jvm', version: '4.6.2'
+
+    compile group: 'net.masterthought', name: 'cucumber-reporting', version: '5.5.2'
+
+
+}
+def generateTagExpr(String tags) {
+    def tagExpr = System.getenv("TAG_EXPRESSION");
+    if (tagExpr != null && !tagExpr.isEmpty()) {
+        return "(" + tags + ") and (" + tagExpr + ")"
+    }
+    return tags
+}
+
+task cucumberStaging(type: Test) {
+    dependsOn classes, testClasses, assemble
+    System.properties.put("cucumber.options", "--monochrome --tags '" + generateTagExpr('@automation:done') +  "'")
+    testLogging.showStandardStreams = true
+    include "TestCucumberStaging.*"
+}
+
+task seleniumTest(type: Test) {
+    dependsOn classes, testClasses, assemble
+    System.properties.put("cucumber.options", "--monochrome --tags '" + generateTagExpr('@automation:done') +  "'")
+    testLogging.showStandardStreams = true
+    include "TestSelenium.*"
+}
+
