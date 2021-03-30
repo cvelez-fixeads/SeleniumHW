@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public class TestStepsSelenium {
+public class TestStepsPetDoc {
 
     private WebDriver driver;
     private Scenario scenario;
@@ -36,8 +36,9 @@ public class TestStepsSelenium {
 
         if (driver == null) {
             ChromeOptions options = new ChromeOptions();
-            options.setHeadless(false);
-           // options.addArguments("--headless");
+            options.setHeadless(true);
+            options.addArguments("--ignore-ssl-errors=yes");
+            options.addArguments("--ignore-certificate-errors");
             driver = new ChromeDriver(options);
         }
 
@@ -65,29 +66,32 @@ public class TestStepsSelenium {
         }
     }
 
-    @Given("Navigate to Page Seleniumeasy")
-    public void navigateToPageSeleniumeasy() {
-        //Selenium test site
-        driver.navigate().to("https://www.seleniumeasy.com/test/basic-first-form-demo.html");
+    @Given("Navigate to Petdoc")
+    public void navigateToPetdoc() {
+        driver.navigate().to("https://bladescave.dyndns.org:4433/Petdoc");
+
     }
 
-    @When("^A User enters a valid input text (.+)")
-    public void aUserEntersAValidInputText(String text) {
-        driver.findElement(By.id("user-message")).sendKeys(text);
+    @When("^A User enters a user (.+)")
+    public void aUserEntersAUserKike(String user) {
+        driver.findElement(By.xpath("//*[@id=\"content\"]/form/div/input[1]")).sendKeys(user);
     }
 
+    @And("^A User enters a valid password (.+)")
+    public void aUserEntersAValidPasswordSecret(String password) {
+        driver.findElement(By.xpath("//*[@id=\"content\"]/form/div/input[2]")).sendKeys(password);
 
-    @And("A User clicks on Show Message button")
-    public void aUserClicksOnShowMessageButton() {
-        //*[@id="get-input"]/button
-        driver.findElement(By.xpath("//*[@id=\"get-input\"]/button")).click();
     }
 
-    @Then("^Application shows message (.+)")
-    public void applicationShowsMessage(String expectedOutput) {
-        String outputText = driver.findElement(By.id("display")).getText();
-        assertThat(outputText, is(expectedOutput));
+    @And("A User clicks in entrar")
+    public void aUserClicksInEntrar() {
+        driver.findElement(By.xpath("//*[@id=\"content\"]/form/div/input[3]")).click();
     }
 
+    @Then("Application should show succes")
+    public void applicationShouldShowSucces() {
+        String output = driver.findElement(By.xpath(" //*[@id=\"header\"]/h2/span")).getText();
+        assertThat(output, stringContainsInOrder("Usuario", "kike"));
 
+    }
 }

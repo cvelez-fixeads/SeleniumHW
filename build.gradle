@@ -17,6 +17,7 @@ configurations {
         extendsFrom testRuntime
     }
 }
+
 cucumberReports {
     outputDir = file('build/cucumber-report/report')
     buildId = '0'
@@ -59,3 +60,9 @@ task seleniumTests(type: Test) {
     include "TestSelenium.*"
 }
 
+task petdocTests(type: Test) {
+    dependsOn classes, testClasses, assemble
+    System.properties.put("cucumber.options", "--monochrome --tags '" + generateTagExpr('@petdoc') +  "'")
+    testLogging.showStandardStreams = true
+    include "TestPetDoc.*"
+}
