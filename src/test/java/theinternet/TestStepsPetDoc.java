@@ -68,7 +68,7 @@ public class TestStepsPetDoc {
 
     @Given("Navigate to Petdoc")
     public void navigateToPetdoc() {
-        driver.navigate().to("https://bladescave.dyndns.org:4433/Petdoc");
+        driver.navigate().to("url");
 
     }
 
